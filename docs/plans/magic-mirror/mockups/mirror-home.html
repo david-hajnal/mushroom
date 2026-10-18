@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .scanline-overlay {
+      background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "error": "#ffb4ab",
+            "primary": "#ffffff",
+            "surface-dim": "#050505",
+            "surface-container-high": "#18181b",
+            "surface": "#000000",
+            "secondary": "#ffba3d",
+            "secondary-container": "#d59401",
+            "surface-container-low": "#09090b",
+            "surface-container-highest": "#222226",
+            "on-surface": "#e3e1ea",
+            "on-primary": "#000000",
+            "outline": "#71717a",
+            "outline-variant": "#27272a",
+            "surface-container": "#111113",
+            "background": "#000000",
+            "on-background": "#e3e1ea",
+            "on-surface-variant": "#a1a1aa",
+            "on-secondary": "#1c1200",
+            "surface-container-lowest": "#000000"
+          },
+          fontFamily: {
+            "chivo": ["Chivo", "sans-serif"],
+            "mono": ["Space Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#000000] text-on-surface antialiased selection:bg-secondary selection:text-black min-h-screen relative font-mono overflow-x-hidden">
+<!-- Subtle CRT Scanline Texture for Mirror Pass-through -->
+<div class="fixed inset-0 scanline-overlay z-50 pointer-events-none opacity-40"></div>
+<!-- Main Container: Vertical HD 9:16 proportions flow -->
+<main class="w-full max-w-[560px] mx-auto min-h-screen flex flex-col justify-between px-4 py-5 gap-y-5 bg-[#000000] z-10 relative">
+<!-- 1. TOP HEADERLESS METRIC & NIXIE CLOCK HUD -->
+<section class="flex flex-col gap-3 pb-3 border-b border-zinc-800/80">
+<div class="flex items-start justify-between">
+<!-- Massive High Contrast Clock -->
+<div class="flex flex-col">
+<div class="flex items-baseline gap-2">
+<span class="font-chivo font-black text-5xl tracking-tight text-white leading-none">13:36</span>
+<span class="font-chivo font-extrabold text-2xl text-secondary leading-none tracking-widest">:42</span>
+</div>
+<div class="flex items-center gap-2 mt-1.5 text-xs text-zinc-400 font-bold uppercase tracking-widest">
+<span class="inline-block w-2 h-2 bg-secondary animate-pulse"></span>
+<span>WEDNESDAY, 24 OCT</span>
+<span class="text-zinc-600">//</span>
+<span class="text-zinc-500">SYS_01</span>
+</div>
+</div>
+<!-- Atmospheric Micro Glance (No Category Headers) -->
+<div class="text-right flex flex-col items-end">
+<div class="flex items-baseline gap-1">
+<span class="font-chivo font-extrabold text-3xl text-white">11.2°</span>
+<span class="text-xs text-zinc-400">C</span>
+</div>
+<span class="text-[11px] text-secondary tracking-widest uppercase font-bold mt-0.5">COLD FOG</span>
+<div class="flex items-center gap-1.5 text-[10px] text-zinc-400 font-mono mt-1">
+<span>1014 hPa</span>
+<span class="text-zinc-700">•</span>
+<span class="text-zinc-300">AQI 22</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. PRIMARY FOCUS: CALENDAR TIMELINE & 5 UPCOMING EVENTS -->
+<section class="flex flex-col gap-3.5 flex-1">
+<!-- Day Timeline Ruler (0700 - 2200) with Active Needle -->
+<div class="bg-zinc-950 border border-zinc-800/80 p-2.5 flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-[10px] text-zinc-400 font-bold px-0.5 tracking-wider">
+<span>07:00</span>
+<span class="text-zinc-600 hidden sm:inline">10:00</span>
+<span class="text-secondary font-black bg-secondary/10 px-1 py-0.5 border border-secondary/30">13:36 [NOW]</span>
+<span class="text-zinc-600 hidden sm:inline">17:00</span>
+<span class="text-zinc-600 hidden sm:inline">19:00</span>
+<span>22:00</span>
+</div>
+<div class="relative w-full h-5 bg-zinc-900 border border-zinc-800 overflow-hidden flex items-center px-1">
+<!-- Scheduled Blocks on Timeline -->
+<div class="absolute left-[38%] w-[12%] h-full bg-secondary/30"></div>
+<div class="absolute left-[52%] w-[10%] h-full bg-white/20"></div>
+<div class="absolute left-[65%] w-[14%] h-full bg-white/20"></div>
+<div class="absolute left-[80%] w-[11%] h-full bg-white/20"></div>
+<!-- Ticks -->
+<div class="absolute inset-0 flex justify-between items-end px-1.5 pb-0.5 opacity-30">
+<div class="h-2 w-px bg-zinc-400"></div>
+<div class="h-1.5 w-px bg-zinc-400"></div>
+<div class="h-2 w-px bg-zinc-400"></div>
+<div class="h-1.5 w-px bg-zinc-400"></div>
+<div class="h-2.5 w-px bg-zinc-400"></div>
+<div class="h-1.5 w-px bg-zinc-400"></div>
+<div class="h-2 w-px bg-zinc-400"></div>
+<div class="h-1.5 w-px bg-zinc-400"></div>
+<div class="h-2 w-px bg-zinc-400"></div>
+</div>
+<!-- Current Position Cursor (approx 44%) -->
+<div class="absolute left-[44%] top-0 bottom-0 w-1 bg-secondary z-20 flex flex-col items-center justify-between shadow-[0_0_8px_#ffba3d]">
+<span class="w-2 h-1 bg-secondary"></span>
+<span class="w-2 h-1 bg-secondary"></span>
+</div>
+</div>
+</div>
+<!-- 5 Upcoming Events Stack (Maximum Visual Punch) -->
+<div class="flex flex-col gap-2" id="schedule-array">
+<!-- EVENT 01: IMMINENT / HERO -->
+<div class="bg-zinc-950 border-2 border-secondary/80 p-3 flex flex-col gap-2 relative">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="bg-secondary text-black font-chivo font-black text-xl px-2 py-0.5 leading-none">14:00</span>
+<span class="bg-secondary/20 text-secondary border border-secondary/40 text-[11px] font-bold px-1.5 py-0.5 uppercase tracking-wide">T-MINUS 24M</span>
+</div>
+<span class="text-xs text-secondary font-bold uppercase tracking-wider">BAY 04 / RACK</span>
+</div>
+<div class="flex flex-col">
+<span class="font-chivo font-black text-lg text-white tracking-tight leading-snug">Master Tape Transfer // Rev-B</span>
+<span class="text-[12px] text-zinc-300 font-mono mt-0.5">Analog Otari MX-5050 • Reel Bias 320nWb/m</span>
+</div>
+</div>
+<!-- EVENT 02 -->
+<div class="bg-zinc-950 border border-zinc-800 p-2.5 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="bg-zinc-800 text-white font-chivo font-black text-base px-1.5 py-0.5 leading-none">15:30</span>
+<span class="text-[10px] text-zinc-400 border border-zinc-800 px-1.5 py-0.5 font-bold uppercase tracking-wider">IN 1H 54M</span>
+</div>
+<span class="text-[11px] text-zinc-400 font-bold uppercase tracking-wider">MAIN SOUNDSTAGE</span>
+</div>
+<div class="flex flex-col">
+<span class="font-chivo font-extrabold text-[15px] text-zinc-100 tracking-tight leading-snug">Acoustic Resonance Calibration</span>
+<span class="text-[11px] text-zinc-400 font-mono">Sub-frequency pink noise array • Sine sweep 20-200Hz</span>
+</div>
+</div>
+<!-- EVENT 03 -->
+<div class="bg-zinc-950 border border-zinc-800 p-2.5 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="bg-zinc-800 text-white font-chivo font-black text-base px-1.5 py-0.5 leading-none">17:15</span>
+<span class="text-[10px] text-zinc-400 border border-zinc-800 px-1.5 py-0.5 font-bold uppercase tracking-wider">IN 3H 39M</span>
+</div>
+<span class="text-[11px] text-zinc-400 font-bold uppercase tracking-wider">PROJECTION LAB</span>
+</div>
+<div class="flex flex-col">
+<span class="font-chivo font-extrabold text-[15px] text-zinc-100 tracking-tight leading-snug">Film Print Review // Black Box</span>
+<span class="text-[11px] text-zinc-400 font-mono">35mm Workprint Reels 1-3 • Density verification</span>
+</div>
+</div>
+<!-- EVENT 04 -->
+<div class="bg-zinc-950 border border-zinc-800 p-2.5 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="bg-zinc-800 text-white font-chivo font-black text-base px-1.5 py-0.5 leading-none">19:00</span>
+<span class="text-[10px] text-zinc-400 border border-zinc-800 px-1.5 py-0.5 font-bold uppercase tracking-wider">IN 5H 24M</span>
+</div>
+<span class="text-[11px] text-zinc-400 font-bold uppercase tracking-wider">SYNTH SUITE 02</span>
+</div>
+<div class="flex flex-col">
+<span class="font-chivo font-extrabold text-[15px] text-zinc-100 tracking-tight leading-snug">Sound Design Session: Industrial Drone</span>
+<span class="text-[11px] text-zinc-400 font-mono">Buchla modular patching &amp; event horizon tape delays</span>
+</div>
+</div>
+<!-- EVENT 05 -->
+<div class="bg-zinc-950 border border-zinc-800/80 p-2.5 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="bg-zinc-800 text-zinc-300 font-chivo font-black text-base px-1.5 py-0.5 leading-none">21:30</span>
+<span class="text-[10px] text-zinc-500 border border-zinc-800 px-1.5 py-0.5 font-bold uppercase tracking-wider">IN 7H 54M</span>
+</div>
+<span class="text-[11px] text-zinc-500 font-bold uppercase tracking-wider">ALL CHANNELS</span>
+</div>
+<div class="flex flex-col">
+<span class="font-chivo font-extrabold text-[15px] text-zinc-300 tracking-tight leading-snug">Low Light Telemetry Sync</span>
+<span class="text-[11px] text-zinc-500 font-mono">Optical phosphor decay baseline check &amp; bias balance</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. PUBLIC TRANSIT SECTION (No redundant section header) -->
+<section class="flex flex-col gap-2 pt-2 border-t border-zinc-800/80">
+<!-- HERO TRANSIT CARD: TRAM 4 -->
+<div class="bg-zinc-950 border border-zinc-800 p-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="bg-white text-black font-chivo font-black text-2xl w-9 h-9 flex items-center justify-center shrink-0">4</span>
+<div class="flex flex-col">
+<span class="font-chivo font-extrabold text-base text-white tracking-tight uppercase">ZÜRICH TIEFENBRUNNEN</span>
+<div class="flex items-center gap-2 text-xs text-zinc-400 font-mono mt-0.5">
+<span class="text-secondary font-bold">16:55 CST</span>
+<span class="text-zinc-600">•</span>
+<span>PLATFORM 2</span>
+<span class="text-zinc-600">•</span>
+<span class="text-zinc-300">+0M ON TIME</span>
+</div>
+</div>
+</div>
+<div class="text-right shrink-0 pl-2">
+<div class="font-chivo font-black text-3xl text-secondary leading-none">08</div>
+<div class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mt-0.5">MINUTES</div>
+</div>
+</div>
+<!-- SECONDARY COMMUTE CONNECTIONS (DIRECT DATA ROWS) -->
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-zinc-950 border border-zinc-800/80 p-2.5 flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-secondary font-chivo">S8</span>
+<span class="text-[11px] text-zinc-200 truncate max-w-[130px]">Winterthur HB</span>
+</div>
+<span class="text-[10px] text-zinc-500 font-mono mt-0.5">GLEIS 3</span>
+</div>
+<div class="text-right">
+<div class="text-xs font-bold text-white">17:12</div>
+<div class="text-[10px] text-secondary font-bold">25M</div>
+</div>
+</div>
+<div class="bg-zinc-950 border border-zinc-800/80 p-2.5 flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-white font-chivo">33</span>
+<span class="text-[11px] text-zinc-200 truncate max-w-[130px]">Triemli Spital</span>
+</div>
+<span class="text-[10px] text-zinc-500 font-mono mt-0.5">KANTE B</span>
+</div>
+<div class="text-right">
+<div class="text-xs font-bold text-white">17:18</div>
+<div class="text-[10px] text-zinc-400 font-bold">31M</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. WIRE DISPATCH / NEWS LINES (Headerless Minimal Terminal Footer) -->
+<footer class="pt-2 border-t border-zinc-800/80 flex flex-col gap-1.5 text-xs">
+<div class="bg-zinc-950 border border-zinc-800/80 px-3 py-2 flex items-start gap-2">
+<span class="text-secondary font-bold text-[10px] shrink-0 mt-0.5">16:42 CST</span>
+<span class="text-zinc-600 shrink-0">//</span>
+<p class="text-zinc-300 text-[11px] leading-relaxed line-clamp-1">
+          Atlantic subsea optical junction cable reporting transient micro-latency shift during low tide alignment.
+        </p>
+</div>
+<div class="bg-zinc-950 border border-zinc-800/80 px-3 py-2 flex items-start gap-2">
+<span class="text-secondary font-bold text-[10px] shrink-0 mt-0.5">16:30 CST</span>
+<span class="text-zinc-600 shrink-0">//</span>
+<p class="text-zinc-300 text-[11px] leading-relaxed line-clamp-1">
+          Global analog silicon fabrication plants resume legacy vacuum tube test cycles for military precision audio radar.
+        </p>
+</div>
+<!-- Minimal Bottom Device Telemetry Micro Bar -->
+<div class="flex justify-between items-center text-[9px] text-zinc-600 font-mono uppercase px-1 pt-1">
+<span>MIRROR PASS: 68% // DIODE: HI</span>
+<span>OLED-MATRIX MK-IV</span>
+</div>
+</footer>
+</main>
+</body></html>

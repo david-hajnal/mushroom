@@ -1,0 +1,11 @@
+# Slices: Magic Mirror
+
+Build order, one capability per slice, each ending in a working + testable state. Provider order follows the spec (simplest → hardest).
+
+- **Slice 1 — Tracer bullet (shell + contract):** Rust binary + Axum serves the ported static frontend (authored CSS, no Tailwind, self-hosted fonts) and `GET /api/v1/dashboard` returns a fully-hardcoded JSON matching the spec §5 shape. Browser renders clock (real local time) + all four sections from the mock. *Prove:* curl the endpoint + browser screenshot at 1080×1920.
+- **Slice 2 — Real weather + AQI:** replace the mock weather section with a live Open-Meteo forecast + air-quality fetch (config-driven lat/lon). Other sections still mock. *Prove:* real temperature + EU AQI on screen; unit tests for WMO code mapping + unknown fallback.
+- **Slice 3 — Real news:** replace mock news with RSS/Atom fetch + parse + dedup + per-feed isolation. *Prove:* real headlines render; broken feed does not drop others; tests for dedup/missing-date/malformed.
+- **Slice 4 — Real transit:** replace mock transit with BKK FUTÁR arrivals-and-departures for configured stops (route/walking filters, realtime-vs-scheduled). *Prove:* real departure for a configured stop; tests for filtering + `SCHEDULED` vs `ON TIME`.
+- **Slice 5 — Real calendar (hardest):** CalDAV discovery + bounded REPORT + iCalendar parse + recurring/DST expansion, using `happening/backend/src/caldav/` as reference. Replace mock events with real iCloud events. *Prove:* real events render; a weekly recurring event with one overridden occurrence shows exactly once; DST transition correct; read-only methods only.
+- **Slice 6 — Reliability:** stale/offline states, exponential backoff + jitter (honor Retry-After), last-good JSON persistence, restart recovery, security headers (CSP/nosniff/referrer), secret redaction. *Prove:* kill network → data retained + marked `STALE`; restart → restored promptly; no secrets in API JSON/logs.
+- **Slice 7 — Deployment + polish:** config validation hardening, systemd service, kiosk autostart, performance-budget check (RAM/binary/static size), real-device screenshot review + spacing. *Prove:* boots headless, kiosk shows the mirror, budgets reported.
