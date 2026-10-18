@@ -1,0 +1,8 @@
+[package]
+name = "magic-mirror"
+version = "0.1.0"
+edition = "2021"
+description = "Magic Mirror — read-only always-on portrait dashboard (calendar, weather, transit, news)."
+
+# Dependencies are added by Slice 1 (axum, tokio, tower-http, serde, serde_json, ...).
+[dependencies]

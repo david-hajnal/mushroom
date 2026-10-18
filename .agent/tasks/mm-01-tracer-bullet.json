@@ -11,5 +11,5 @@
     "Static assets (CSS, fonts) are served under /assets/* with correct content types"
   ],
   "docs_required": false,
-  "status": "blocked"
+  "status": "ready"
 }
