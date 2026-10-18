@@ -3,7 +3,7 @@
 - Gate 1 — Product: APPROVED 2026-10-18
 - Gate 2 — Architecture: APPROVED 2026-10-18
 - Gate 3 — Program Design: APPROVED 2026-10-18
-- Gate 4 — Slice plan: pending
+- Gate 4 — Slice plan: APPROVED 2026-10-18 (installed into plan-orchestrator as tasks mm-01…mm-07)
 
 ## Slices
 - [ ] Slice 1 — tracer bullet: shell + hardcoded `/api/v1/dashboard` contract, rendered in browser
@@ -13,6 +13,12 @@
 - [ ] Slice 5 — real calendar (CalDAV, recurring/DST)
 - [ ] Slice 6 — reliability (stale/offline/backoff/persistence/security)
 - [ ] Slice 7 — deployment + polish (systemd/kiosk/budgets/real device)
+
+## Orchestrator
+- Project registered in `plan-orchestrator` as `mushroom` (priority 1, enabled).
+- Tasks live in `.agent/tasks/mm-0*.json`; linear chain mm-01 → … → mm-07, each `blocked` with `unblock_when_dependencies_complete: true` until its predecessor completes.
+- Acceptance criteria are agent-verifiable only (curl / unit tests / builds). **Live checks are manual (operator):** browser rendering + 1080×1920 screenshot, real temperature/AQI/headlines/departures/events on screen, network-kill, headless boot + kiosk display, real-device screenshot review.
+- Drive with: `plan-orchestrator run-once` / `run` / `status` / `retry` (from `/Users/kaszperek/repos/plan-orchestrator/.venv/bin`).
 
 ## Notes for a fresh session
 - Existing technical spec: `docs/techplan/magic-mirror-technical-spec.md` (v1.0) — covers product, architecture, providers, API, config, security, testing. Treat as input material; the gate docs in this folder are the source of truth for decisions.

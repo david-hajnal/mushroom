@@ -1,0 +1,18 @@
+{
+  "id": "mm-06-reliability",
+  "title": "Slice 6 — Reliability (stale/offline/backoff/persistence/security) — docs/plans/magic-mirror/04-slices.md",
+  "priority": 3,
+  "depends_on": [
+    "mm-05-calendar"
+  ],
+  "acceptance": [
+    "When a source fails (simulated), that section is marked STALE and the last-good data is retained",
+    "Unit tests cover exponential backoff with jitter and Retry-After honoring",
+    "The last-good JSON is persisted to disk, and on restart the section is restored from last-good before the first refresh (tested)",
+    "Responses include security headers: CSP, X-Content-Type-Options: nosniff, Referrer-Policy (verified via curl -I)",
+    "Secrets do not appear in API JSON or logs (verified by test/grep)"
+  ],
+  "docs_required": false,
+  "unblock_when_dependencies_complete": true,
+  "status": "blocked"
+}
