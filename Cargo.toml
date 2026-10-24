@@ -4,5 +4,17 @@ version = "0.1.0"
 edition = "2021"
 description = "Magic Mirror — read-only always-on portrait dashboard (calendar, weather, transit, news)."
 
-# Dependencies are added by Slice 1 (axum, tokio, tower-http, serde, serde_json, ...).
 [dependencies]
+axum = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+tower-http = { version = "0.6", features = ["fs", "set-header", "trace"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde"] }
+toml = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+quick-xml = "0.36"
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"

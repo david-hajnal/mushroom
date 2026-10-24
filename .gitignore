@@ -3,3 +3,5 @@ target
 .agent
 docs
 data
+
+/mirror.toml
