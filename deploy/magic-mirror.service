@@ -1,0 +1,61 @@
+# magic-mirror.service — the Magic Mirror server (Slice 7).
+#
+# Runs the single Rust binary that serves the static frontend and the
+# /api/v1 JSON API. Secrets (CalDAV app password, BKK API key) are read from
+# the environment via EnvironmentFile — never from this unit or the config
+# file (spec §9: "Env var NAMES only; values never in code, logs, static
+# assets, or API JSON").
+#
+# Install (as root, on the target Raspberry Pi / Linux host):
+#   sudo useradd -r -s /usr/sbin/nologin mirror
+#   sudo mkdir -p /etc/magic-mirror /var/lib/magic-mirror
+#   sudo cp config/mirror.example.toml /etc/magic-mirror/config.toml   # then edit
+#   sudo cp deploy/magic-mirror.env   /etc/magic-mirror/mirror.env     # then edit
+#   sudo cp static -r                /usr/share/magic-mirror
+#   sudo install -m 0755 target/release/magic-mirror /usr/local/bin/magic-mirror
+#   sudo chown -R mirror:mirror /var/lib/magic-mirror
+#   sudo cp deploy/magic-mirror.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now magic-mirror
+#   journalctl -u magic-mirror -f
+#
+# Verify the unit syntax before installing:
+#   systemd-analyze verify deploy/magic-mirror.service
+#   (or: python3 deploy/verify_unit.py deploy/magic-mirror.service)
+
+[Unit]
+Description=Magic Mirror — always-on portrait dashboard (calendar, weather, transit, news)
+After=network-online.target
+Wants=network-online.target
+# Fail fast on repeated boot failures instead of looping forever.
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+# Dedicated, unprivileged user (created in the install steps above).
+User=mirror
+Group=mirror
+WorkingDirectory=/etc/magic-mirror
+# Secrets + optional overrides come from the env file (see deploy/magic-mirror.env).
+# The leading '-' means a missing file is not fatal (defaults apply).
+EnvironmentFile=-/etc/magic-mirror/mirror.env
+ExecStart=/usr/local/bin/magic-mirror
+Restart=on-failure
+RestartSec=5
+# Resource ceiling so a leak can't take the whole board down.
+LimitNOFILE=4096
+# Hardening (best-effort on a small Linux host):
+#   - no privilege escalation, private /tmp
+#   - /etc, /usr, /boot read-only; the mirror only writes its last-good
+#     snapshot under /var/lib/magic-mirror (writable, see ReadWritePaths)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/magic-mirror
+# The dashboard is read-only: it needs no capability to add.
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

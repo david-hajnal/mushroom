@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="hu" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Magic Mirror</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <div class="scanline-overlay" aria-hidden="true"></div>
+
+  <div class="calendar-menu" id="calendar-menu">
+    <button class="menu-toggle" id="menu-toggle" type="button"
+      aria-label="Calendar visibility" aria-expanded="false" aria-controls="calendar-panel">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <section class="calendar-panel" id="calendar-panel" aria-labelledby="calendar-heading" hidden>
+      <h2 id="calendar-heading">Visible calendars</h2>
+      <p>Choose which calendars appear on this display.</p>
+      <div id="calendar-options">Loading calendars…</div>
+      <p id="calendar-save-status" role="status">Saved in this browser.</p>
+    </section>
+  </div>
+
+  <main class="mirror">
+    <!-- 1. Clock + conditions HUD -->
+    <section class="hud" aria-label="Clock and conditions">
+      <div class="hud-left">
+        <div class="clock">
+          <span class="clock-time" id="clock-time">--:--</span>
+          <span class="clock-seconds" id="clock-seconds">:--</span>
+        </div>
+        <div class="hud-meta">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span id="clock-date">—</span>
+          <span class="sep" aria-hidden="true">//</span>
+          <span class="sys">SYS_01</span>
+        </div>
+      </div>
+      <div class="hud-right" id="weather-glance">
+        <div class="temp">
+          <span id="wx-temp">--</span><span class="unit">°C</span>
+        </div>
+        <div class="wx-condition" id="wx-condition">—</div>
+        <div class="wx-extra">
+          <span id="wx-pressure">-- hPa</span>
+          <span class="dot" aria-hidden="true">•</span>
+          <span id="wx-aqi">AQI --</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Day timeline + 3. Calendar events -->
+    <section class="calendar" aria-label="Calendar">
+      <div class="timeline" id="timeline">
+        <div class="ruler-labels" id="ruler-labels"></div>
+        <div class="ruler-track" id="ruler-track">
+          <div class="ruler-now" id="ruler-now" hidden></div>
+        </div>
+      </div>
+      <div class="events" id="events"></div>
+    </section>
+
+    <!-- 4. Transit -->
+    <section class="transit" aria-label="Transit departures">
+      <div class="transit-hero" id="transit-hero"></div>
+      <div class="transit-secondary" id="transit-secondary"></div>
+    </section>
+
+    <!-- 5. News + device footer -->
+    <footer class="news" aria-label="News">
+      <div class="news-ticker">
+        <div class="news-ticker-track" id="news-track"></div>
+      </div>
+      <div class="device-bar">
+        <span id="device-left">MAGIC MIRROR</span>
+        <span id="device-right">v0.1.0</span>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module" src="/assets/app.js"></script>
+</body>
+</html>

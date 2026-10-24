@@ -1,0 +1,89 @@
+# mirror.example.toml — example Magic Mirror configuration (Slice 7).
+#
+# Copy to your working directory (or point MIRROR_CONFIG at it) and edit.
+# Every key is optional: the built-in defaults (see src/config.rs) apply when a
+# key is omitted. Secrets are NEVER read from this file — they come from the
+# environment (see deploy/magic-mirror.env).
+#
+# Precedence (highest wins): environment variables > this file > defaults.
+#
+# The server validates this file at boot and fails fast with an actionable
+# error if a value is invalid (e.g. an out-of-range coordinate or a zero
+# refresh interval). A missing file is fine — defaults apply.
+
+# --- Server -----------------------------------------------------------------
+[server]
+# Socket address to bind. Default "127.0.0.1:3000" (same-device kiosk).
+# Use a LAN address (e.g. "0.0.0.0:3000") only behind a trusted network.
+bind = "127.0.0.1:3000"
+
+# --- Display ----------------------------------------------------------------
+[display]
+# IANA timezone used to stamp the dashboard payload.
+timezone = "Europe/Budapest"
+# BCP-47 locale for the frontend.
+locale = "hu-HU"
+
+# --- Weather / air-quality (Open-Meteo) -------------------------------------
+[weather]
+# WGS-84 decimal degrees (lat in [-90, 90], lon in [-180, 180]).
+lat = 47.4979
+lon = 19.0402
+# Refresh intervals in seconds (must be > 0). Weather and AQI are independent.
+weather_refresh_secs = 900   # 15 min
+aqi_refresh_secs = 3600      # 60 min
+# Base URLs (overridable for tests / self-hosted mirrors of the API).
+forecast_base_url = "https://api.open-meteo.com/v1/forecast"
+air_quality_base_url = "https://air-quality-api.open-meteo.com/v1/air-quality"
+
+# --- News (RSS/Atom) --------------------------------------------------------
+# Each feed needs a non-empty http(s) url. An empty list means "no feeds"
+# (the news section reports unavailable).
+[news]
+news_refresh_secs = 900      # 15 min
+
+[[news.feeds]]
+url = "https://example.com/feed.xml"
+name = "Example feed"
+
+# [[news.feeds]]
+# url = "https://another.example.org/atom"
+# name = "Another"
+
+# --- Calendar (CalDAV) ------------------------------------------------------
+# Disabled by default (the dashboard keeps its mock calendar section).
+# When enabled, `url` and `username` are required; the app password is
+# env-only (MIRROR_CALDAV_APP_PASSWORD) and must NOT be set here.
+[calendar]
+enabled = false
+url = "https://caldav.icloud.com/"
+username = ""
+# Names of the calendars to show (empty = every calendar under the home).
+calendar_names = []
+refresh_secs = 300           # 5 min
+# Rolling window from now: 1 = next 24h, 2 = next 48h, 7 = next week (168h).
+# Must be positive. Env override: MIRROR_CALENDAR_LOOKAHEAD_DAYS.
+lookahead_days = 7
+
+# --- Transit (BKK FUTÁR) ----------------------------------------------------
+# Disabled by default (the dashboard keeps its mock transit section).
+# When enabled, at least one `stops` entry is required; the API key is
+# env-only (MIRROR_BKK_API_KEY, from opendata.bkk.hu) and must NOT be set here.
+# Data source: BKK Zrt., CC BY 4.0.
+[transit]
+enabled = false
+# BKK FUTÁR stop IDs to show departures for (e.g. "BKK:9210001:1").
+stops = []
+# Route short-names to keep (e.g. ["4", "6", "8"]); empty = every route.
+routes = []
+# Departure horizon in minutes (only departures within this window are shown).
+walking_minutes = 30
+refresh_secs = 30            # 30 s (spec §8 transit cadence)
+# Base URL (overridable for tests / self-hosted mirrors of the API).
+base_url = "https://futar.bkk.hu/api/query/v1/ws/otp/api/where/"
+
+# --- Paths ------------------------------------------------------------------
+# Directory holding the static frontend (index.html + assets/).
+static_dir = "static"
+# Where the last-good snapshot is persisted (Slice 6 restart recovery).
+snapshot_path = "data/snapshot.json"

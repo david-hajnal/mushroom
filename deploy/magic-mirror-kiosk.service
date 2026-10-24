@@ -1,0 +1,74 @@
+# magic-mirror-kiosk.service — full-screen Chromium kiosk (Slice 7).
+#
+# Launches Chromium in kiosk mode pointing at the local Magic Mirror server
+# (spec §10: "full-screen Chromium in kiosk mode pointing at
+# http://127.0.0.1:3000"). It starts after the server and after the display,
+# and restarts if it crashes.
+#
+# This is the "kiosk autostart" for the target platform (Raspberry Pi / Linux
+# with a display). For a desktop environment instead, use
+# deploy/magic-mirror-kiosk.desktop (see that file's header).
+#
+# Install (as root):
+#   sudo cp deploy/magic-mirror-kiosk.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now magic-mirror-kiosk
+#
+# Verify the unit syntax before installing:
+#   systemd-analyze verify deploy/magic-mirror-kiosk.service
+#   (or: python3 deploy/verify_unit.py deploy/magic-mirror-kiosk.service)
+
+[Unit]
+Description=Magic Mirror kiosk — full-screen Chromium on the local dashboard
+# Start only once the network is up and the server is running.
+After=network-online.target magic-mirror.service display-manager.service
+Wants=network-online.target
+# The kiosk is useless without the server; require it so a server failure is
+# visible rather than a blank browser.
+Requires=magic-mirror.service
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+# Run as the display user (the one with the graphical session). Adjust to the
+# actual kiosk user on the target device.
+User=mirror
+# Chromium kiosk flags:
+#   --kiosk                          full-screen, no browser chrome
+#   --no-first-run / --no-default-browser-check   skip first-run UI
+#   --disable-features=Translate     no translate bubble
+#   --disable-session-crashed-bubble no "restore pages?" bubble
+#   --disable-infobars               no infobars
+#   --disable-background-networking  no background sync/updates
+#   --disable-component-update       no component auto-update
+#   --disable-sync                   no account sync
+#   --metrics-recording-only         no metrics upload
+#   --mute-audio                     a dashboard has no audio
+#   --start-maximized                belt-and-braces full screen
+#   --app=URL                        app mode (no tabs/omnibox) at the dashboard
+ExecStart=/usr/bin/chromium-browser \
+    --kiosk \
+    --no-first-run \
+    --no-default-browser-check \
+    --disable-features=Translate \
+    --disable-session-crashed-bubble \
+    --disable-infobars \
+    --disable-background-networking \
+    --disable-component-update \
+    --disable-sync \
+    --metrics-recording-only \
+    --mute-audio \
+    --start-maximized \
+    --app=http://127.0.0.1:3000
+Restart=on-failure
+RestartSec=5
+# Disable screen blanking / power management for an always-on display
+# (spec §10: "disable screen blanking where appropriate").
+Environment=DISPLAY=:0
+# Keep the process from forking into the background (Type=simple expects the
+# main process to stay in the foreground).
+KillMode=mixed
+
+[Install]
+WantedBy=graphical.target

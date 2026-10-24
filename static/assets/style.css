@@ -1,0 +1,865 @@
+/* Magic Mirror — authored stylesheet (Slice 1).
+ *
+ * Ports the Tailwind mockup look to hand-written CSS. No framework, no CDN.
+ * Fonts are self-hosted WOFF2 (Chivo variable 700–900, Space Mono 400/700 +
+ * italic 400), each split into latin / latin-ext subsets for Hungarian
+ * diacritics. Colors follow spec §2.1 preferred tokens.
+ */
+
+/* ------------------------------------------------------------------ *
+ * Font faces (self-hosted)
+ * ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Chivo";
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url("/assets/fonts/chivo-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Chivo";
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url("/assets/fonts/chivo-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/space-mono-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/space-mono-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/space-mono-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/space-mono-700-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/space-mono-400i-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/space-mono-400i-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ------------------------------------------------------------------ *
+ * Design tokens
+ * ------------------------------------------------------------------ */
+:root {
+  --bg: #000000;
+  --panel: #09090b;
+  --panel-2: #111113;
+  --border: #27272a;
+  --border-soft: rgba(39, 39, 42, 0.8);
+  --text: #e3e1ea;
+  --text-bright: #ffffff;
+  --muted: #a1a1aa;
+  --muted-2: #71717a;
+  --muted-3: #52525b;
+  --muted-4: #3f3f46;
+  --accent: #ffba3d;
+  --accent-dim: rgba(255, 186, 61, 0.1);
+  --accent-border: rgba(255, 186, 61, 0.3);
+  --accent-strong: rgba(255, 186, 61, 0.8);
+  --font-display: "Chivo", system-ui, -apple-system, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* CRT scanline texture for the mirror pass-through (spec §2.1). */
+.scanline-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.4;
+  background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+  background-size: 100% 4px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Layout shell
+ * ------------------------------------------------------------------ */
+/* Base composition = stacked column (width <= height, and square).
+   Landscape (width > height) overrides this in the aspect-ratio query below.
+   Sizing is bounded and scales from the smaller viewport dimension (vmin) so
+   landscape height keeps spacing/type in check. No fixed height, no overflow
+   suppression, no transforms. */
+.mirror {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(min-content, 1fr) auto auto;
+  grid-template-areas:
+    "hud"
+    "calendar"
+    "transit"
+    "news";
+  gap: clamp(16px, 2.5vmin, 32px);
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(20px, 4vmin, 48px);
+  background: var(--bg);
+}
+
+/* Assign the existing sections to their grid areas. */
+.hud {
+  grid-area: hud;
+}
+.calendar {
+  grid-area: calendar;
+  min-width: 0;
+}
+.transit {
+  grid-area: transit;
+  min-width: 0;
+}
+.news {
+  grid-area: news;
+}
+
+/* Landscape: strictly wider than tall. HUD and news span both columns;
+   calendar takes the larger left column, transit the right. */
+@media (aspect-ratio > 1 / 1) {
+  .mirror {
+    grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(min-content, 1fr) auto;
+    grid-template-areas:
+      "hud hud"
+      "calendar transit"
+      "news news";
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 1. HUD — clock + conditions
+ * ------------------------------------------------------------------ */
+.hud {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.hud-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.clock {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.clock-time {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(64px, 10vmin, 112px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text-bright);
+}
+
+.clock-seconds {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(32px, 5vmin, 56px);
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.hud-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.pulse-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.sep {
+  color: var(--muted-3);
+}
+
+.sys {
+  color: var(--muted-2);
+}
+
+.hud-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.temp {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+/* The rendered numeric element is #wx-temp (no .value class in the markup). */
+#wx-temp {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(32px, 5vmin, 48px);
+  line-height: 1;
+  color: var(--text-bright);
+}
+
+.temp .unit {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.wx-condition {
+  margin-top: 0.125rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.wx-extra {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+  font-size: 0.625rem;
+  color: var(--muted);
+}
+
+.wx-extra .dot {
+  color: var(--muted-4);
+}
+
+.wx-extra .aqi {
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ *
+ * 2. Timeline ruler
+ * ------------------------------------------------------------------ */
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.625rem;
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+}
+
+.ruler-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.125rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.ruler-labels .label {
+  color: var(--muted);
+}
+
+.ruler-labels .label.now {
+  font-family: var(--font-display);
+  font-weight: 900;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 0.125rem 0.25rem;
+  border: 1px solid var(--accent-border);
+}
+
+.ruler-track {
+  position: relative;
+  width: 100%;
+  height: 1.25rem;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.ruler-block {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.ruler-block.accent {
+  background: rgba(255, 186, 61, 0.3);
+}
+
+.ruler-ticks {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 0.375rem 0.125rem;
+  opacity: 0.3;
+}
+
+.ruler-ticks .tick {
+  width: 1px;
+  background: var(--muted);
+}
+
+.ruler-now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.25rem;
+  z-index: 20;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ------------------------------------------------------------------ *
+ * 3. Event cards
+ * ------------------------------------------------------------------ */
+.events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.event {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: clamp(10px, 1.5vmin, 18px);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  min-width: 0;
+}
+
+.event.imminent {
+  padding: 0.75rem;
+  border: 2px solid var(--accent-strong);
+}
+
+.event-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.event-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.event-time .chip {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.25rem 0.375rem;
+  background: #27272a;
+  color: var(--text-bright);
+}
+
+.event.imminent .event-time .chip {
+  font-size: 1.25rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--accent);
+  color: #000;
+}
+
+.badge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.event.imminent .badge {
+  background: rgba(255, 186, 61, 0.2);
+  border-color: rgba(255, 186, 61, 0.4);
+  color: var(--accent);
+}
+
+.event-location {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.event.imminent .event-location {
+  color: var(--accent);
+}
+
+.event-body .title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(18px, 2.6vmin, 26px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.event.imminent .event-body .title {
+  font-size: clamp(20px, 3vmin, 28px);
+  color: var(--text-bright);
+}
+
+/* All-day events: a grey background so they read as a different kind of
+   entry from timed events. */
+.event.allday {
+  background: var(--muted-4);
+  border-color: var(--muted-3);
+}
+
+/* ------------------------------------------------------------------ *
+ * 4. Transit
+ * ------------------------------------------------------------------ */
+.transit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-soft);
+}
+
+.transit-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.transit-hero .left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.route-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+  background: #fff;
+  color: #000;
+}
+
+.transit-hero .dest {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  overflow-wrap: anywhere;
+}
+
+.transit-hero .meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.125rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.transit-hero .meta .time {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.transit-hero .meta .dot {
+  color: var(--muted-4);
+}
+
+.transit-hero .meta .status {
+  color: var(--muted);
+}
+
+.transit-hero .right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+}
+
+.transit-hero .minutes {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.875rem;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.transit-hero .minutes-label {
+  margin-top: 0.125rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.transit-secondary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+/* In the narrow landscape right column, stack the secondary departures.
+   (Landscape condition = aspect-ratio > 1/1, same as the .mirror query above.) */
+@media (aspect-ratio > 1 / 1) {
+  .transit-secondary {
+    grid-template-columns: 1fr;
+  }
+}
+
+.transit-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.625rem;
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+}
+
+/* Let the (unclassed) left flex item shrink below its content so the
+   destination ellipsis below can actually constrain width. */
+.transit-item > div {
+  min-width: 0;
+}
+
+.transit-item .route {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+/* Must be a box (inline-block) — max-width/overflow/text-overflow are inert
+   on a plain inline element. Width-constrained inline box per program design. */
+.transit-item .dest {
+  display: inline-block;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  color: var(--text);
+}
+
+.transit-item .platform {
+  margin-top: 0.125rem;
+  font-size: 0.625rem;
+  color: var(--muted-2);
+}
+
+.transit-item .right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.transit-item .time {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.transit-item .mins {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ *
+ * 5. News + device footer
+ * ------------------------------------------------------------------ */
+.news {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-soft);
+  font-size: 0.75rem;
+}
+
+.news-ticker {
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+}
+
+.news-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: news-scroll 60s linear infinite;
+}
+
+.news-item {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0.5rem 0;
+  /* margin (not flex gap) so the -50% loop point stays exact */
+  margin-right: 2.5rem;
+}
+
+.news-item .time {
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.news-item .sep {
+  flex-shrink: 0;
+  margin: 0 0.5rem;
+  color: var(--muted-3);
+}
+
+.news-item .text {
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+@keyframes news-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.device-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0.25rem 0;
+  margin-top: 0.25rem;
+  font-size: 0.5625rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--muted-3);
+}
+
+/* ------------------------------------------------------------------ *
+ * Reduced motion
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot {
+    animation: none;
+  }
+  .news-ticker {
+    overflow-x: auto;
+  }
+  .news-ticker-track {
+    animation: none;
+  }
+}
+
+/* Calendar visibility controls sit above the display without shifting it. */
+.calendar-menu {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 60;
+}
+.menu-toggle {
+  display: block;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+.menu-toggle:hover,
+.menu-toggle[aria-expanded="true"] {
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+.menu-toggle:focus-visible,
+.calendar-option input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.calendar-panel {
+  width: min(340px, calc(100vw - 24px));
+  max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  margin-top: 8px;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 40px #000;
+}
+.calendar-panel h2 {
+  margin: 0;
+  color: var(--text-bright);
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+.calendar-panel p,
+.calendar-empty {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.calendar-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.calendar-option input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}

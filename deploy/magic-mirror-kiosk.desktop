@@ -1,0 +1,29 @@
+# magic-mirror-kiosk.desktop — kiosk autostart for a desktop environment (Slice 7).
+#
+# Alternative to the systemd kiosk service (deploy/magic-mirror-kiosk.service)
+# for targets that use a desktop session (e.g. a Pi running a lightweight DE,
+# or a dev machine). It launches full-screen Chromium pointed at the local
+# Magic Mirror server.
+#
+# Install (for the kiosk user):
+#   # Server first (see deploy/magic-mirror.service), then:
+#   cp deploy/magic-mirror-kiosk.desktop ~/.config/autostart/
+#   # or, system-wide:
+#   sudo cp deploy/magic-mirror-kiosk.desktop /etc/xdg/autostart/
+#
+# The desktop file is validated by the same syntax checker:
+#   python3 deploy/verify_unit.py deploy/magic-mirror-kiosk.desktop
+#
+# NOTE: .desktop files are a different (freedesktop) format from systemd units;
+# the checker validates the keys this file uses.
+
+[Desktop Entry]
+Type=Application
+Name=Magic Mirror Kiosk
+Comment=Full-screen Chromium on the local Magic Mirror dashboard
+Exec=chromium-browser --kiosk --no-first-run --no-default-browser-check --disable-features=Translate --disable-session-crashed-bubble --disable-infobars --mute-audio --start-maximized --app=http://127.0.0.1:3000
+Terminal=false
+StartupNotify=false
+# Show in no menu (it is an autostart entry, not a launcher).
+NoDisplay=true
+Categories=Utility;

@@ -1,0 +1,5 @@
+config/mirror.toml
+target
+.agent
+docs
+data
