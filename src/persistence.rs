@@ -107,15 +107,19 @@ fn temp_path(path: &Path) -> PathBuf {
 mod tests {
     use super::*;
 
+    /// A process-wide counter so every `temp_dir()` call gets a distinct
+    /// directory. All tests run in one process (same pid) and macOS
+    /// `SystemTime` resolution is ~1ms, so a timestamp alone is not unique
+    /// under parallel test execution: two tests landing on the same tick would
+    /// share a directory, and one's `remove_dir_all` would delete the other's
+    /// mid-run (surfacing as a spurious `NotFound` in `save`).
+    static TEMP_DIR_COUNTER: AtomicU64 = AtomicU64::new(0);
+
     /// A unique temp directory per test (no cross-test interference).
     fn temp_dir() -> PathBuf {
-        use std::time::{SystemTime, UNIX_EPOCH};
         let n = std::process::id();
-        let t = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map(|d| d.as_nanos())
-            .unwrap_or(0);
-        let dir = std::env::temp_dir().join(format!("mm-persist-{n}-{t}"));
+        let c = TEMP_DIR_COUNTER.fetch_add(1, Ordering::Relaxed);
+        let dir = std::env::temp_dir().join(format!("mm-persist-{n}-{c}"));
         let _ = fs::remove_dir_all(&dir);
         fs::create_dir_all(&dir).expect("create temp dir");
         dir
