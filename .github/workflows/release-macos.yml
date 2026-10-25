@@ -34,10 +34,10 @@ jobs:
             runner: macos-15-intel
     steps:
       - name: Check out repository
-        uses: actions/checkout@b4ffde65f46336ab580fc749b1466681cd909d9c # v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Rust
-        uses: actions/setup-rust@5e57d8bf1c621863884224a136b113d66b6e4216 # v1.7.0
+        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # v1
         with:
           toolchain: stable
 
@@ -141,7 +141,7 @@ jobs:
           cat "SHA256SUMS.${{ matrix.arch }}"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@24e95e90e7278084a9d1c558b73ee2e80f9d1580 # v4.6.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: magic-mirror-${{ matrix.arch }}
           path: |
@@ -158,13 +158,13 @@ jobs:
       contents: write
     steps:
       - name: Download Apple Silicon artifacts
-        uses: actions/download-artifact@cc20c321ba964b0bfe22e2b6fc2d1c341be53fc9 # v4.3.0
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: magic-mirror-aarch64-apple-darwin
           path: dist
 
       - name: Download Intel artifacts
-        uses: actions/download-artifact@cc20c321ba964b0bfe22e2b6fc2d1c341be53fc9 # v4.3.0
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: magic-mirror-x86_64-apple-darwin
           path: dist
@@ -176,7 +176,7 @@ jobs:
           cat dist/SHA256SUMS
 
       - name: Create draft GitHub Release
-        uses: softprops/action-gh-release@1e07f439802f0c76bd572d761c4df10247b203d1 # v2.4.0
+        uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5 # v2.4.0
         with:
           tag_name: ${{ github.ref_name }}
           draft: true
