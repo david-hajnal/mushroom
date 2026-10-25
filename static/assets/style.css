@@ -174,10 +174,10 @@ body {
     "calendar"
     "transit"
     "news";
-  gap: clamp(16px, 2.5vmin, 32px);
+  gap: clamp(16px, 2vmin, 32px);
   width: 100%;
   min-height: 100vh;
-  padding: clamp(20px, 4vmin, 48px);
+  padding: clamp(20px, 3vmin, 48px);
   background: var(--bg);
 }
 
@@ -213,10 +213,14 @@ body {
 /* ------------------------------------------------------------------ *
  * 1. HUD — clock + conditions
  * ------------------------------------------------------------------ */
+/* Approved contract: "clock left / conditions right" (03-program-design.md).
+   A single row: clock/date on the left, weather on the right. */
 .hud {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-soft);
 }
@@ -237,7 +241,7 @@ body {
 .clock-time {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(64px, 10vmin, 112px);
+  font-size: clamp(64px, 8.9vmin, 112px);
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--text-bright);
